@@ -29,6 +29,25 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a98d5019-f69f-4bf5-b924-39728b206614"
+      }
     }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5371077111495842~1236744482",
+    "ios_app_id": "ca-app-pub-5371077111495842~9579883330"
   }
 }
