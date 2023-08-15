@@ -217,11 +217,11 @@ export default function FileUploadScreen({ navigation }) {
                 {renderUploadContent()}
             </GeneralModal>
             <GeneralModal 
-                visible={showConnectionError} 
+                visible={showConnectionError}
                 onClose={() => setShowConnectionError(false)}
             >
-                <FontAwesome name="times-circle" size={50} color="red" />
-                <Text style={{color: 'red', fontWeight: 'bold', marginTop: 10}}>Error: Unable to connect to server.</Text>
+                <FontAwesome name="times-circle" size={110} color="red" />
+                <Text style={{color: 'red', fontWeight: 'bold', marginTop: 10, fontSize: 24}}>Error: Unable to connect to server.</Text>
                 
                 <Pressable
                     style={({pressed}) => [
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   itemBox: {
-      margin: 10, 
+      marginTop: 60, 
       padding: 40, 
       backgroundColor: theme.colors.primary, 
       width: '80%', 
