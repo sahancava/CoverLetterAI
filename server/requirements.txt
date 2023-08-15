@@ -1,0 +1,4 @@
+Flask
+Flask-MySQLdb
+python-decouple
+Flask-CORS
