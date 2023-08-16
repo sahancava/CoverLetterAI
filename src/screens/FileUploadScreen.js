@@ -11,6 +11,25 @@ import * as Application from 'expo-application'
 import { FIREBASE_STORAGE } from '../../firebaseConfig'
 import { uploadBytesResumable, ref } from 'firebase/storage';
 import { theme } from '../core/theme'
+import mobileAds, { MaxAdContentRating, InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+
+const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
+
+
+// mobileAds()
+//   .setRequestConfiguration({
+//     // Update all future ad requests suitable for parental guidance
+//     maxAdContentRating: MaxAdContentRating.PG,
+
+//     // Indicates that you want your content treated as child-directed for purposes of COPPA.
+//     tagForChildDirectedTreatment: true,
+
+//     // Indicates that you want the ad request to be handled in a manner suitable for users under the age of consent.
+//     tagForUnderAgeOfConsent: true,
+//   })
+//   .then(() => {
+//     // Request config successfully set!
+//   });
 
 // eslint-disable-next-line react/prop-types
 export default function FileUploadScreen({ navigation }) {
@@ -23,7 +42,15 @@ export default function FileUploadScreen({ navigation }) {
     const [isConnected, setIsConnected] = useState(false);
     const [showConnectionError, setShowConnectionError] = useState(false);
     const [connectionChecked, setConnectionChecked] = useState(false);
+    const [adLoaded, setAdLoaded] = useState(false);
     
+    interstitial.addAdEventsListener((type, error) => {
+      if (type === AdEventType.LOADED) {
+        setAdLoaded(true);
+      }
+    });
+    interstitial.load();
+
     const checkConnection = async () => {
       try {
           const response = await fetch('http://192.168.3.97:5001/isConnected');
@@ -108,11 +135,19 @@ export default function FileUploadScreen({ navigation }) {
               () => {
                 // Upload completed successfully, handle success action here
                 setUploadSuccess(true);
-                setTimeout(() => {
+                setTimeout(async () => {
                   setUploading(false);
                   setUploadSuccess(false);
                   setSelectedURL(null);
-                  navigation.navigate('StartScreen'); // Navigating to StartScreen
+                  // navigation.navigate('StartScreen'); // Navigating to StartScreen
+                  
+                  interstitial.show();
+                  if (adLoaded) {
+                    interstitial.show();
+                  } else {
+                      // If the ad isn't loaded for some reason, navigate directly
+                      navigation.navigate('StartScreen');
+                  }
                 }, 3000);
               }
             );
@@ -170,7 +205,7 @@ export default function FileUploadScreen({ navigation }) {
       if (!connectionChecked) {
           checkConnection(); // Immediate check
       }
-  }, [connectionChecked]);
+    }, [connectionChecked]);
 
     useEffect(() => {
       const fetchDeviceID = async () => {
